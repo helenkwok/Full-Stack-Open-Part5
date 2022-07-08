@@ -1,4 +1,6 @@
 {
+  "name": "full-stack-open-part5",
+  "author": "Helen Kwok",
   "scripts": {
     "build:ui": "rm -rf /build && cd ../bloglist-frontend/ && npm run build && cp -r build ../bloglist-backend/build/",
     "deploy": "git subtree push --prefix bloglist-backend heroku main",
