@@ -1,5 +1,5 @@
 {
-  "name": "full-stack-open-part4",
+  "name": "bloglist-backend",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -9,16 +9,6 @@
     "lint": "eslint .",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit"
   },
-  "author": "Helen Kwok",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/helenkwok/Full-Stack-Open-Part4.git"
-  },
-  "bugs": {
-    "url": "https://github.com/helenkwok/Full-Stack-Open-Part4/issues"
-  },
-  "homepage": "https://github.com/helenkwok/Full-Stack-Open-Part4#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
