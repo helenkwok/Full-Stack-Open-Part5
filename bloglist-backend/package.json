@@ -7,7 +7,11 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "lint": "eslint .",
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit"
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit",
+    "build:ui": "rm -rf /build && cd ../bloglist-frontend/ && npm run build && cp -r build ../bloglist-backend/build/",
+    "deploy": "git subtree push --prefix bloglist-backend heroku main",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
+    "logs:prod": "heroku logs --tail"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
