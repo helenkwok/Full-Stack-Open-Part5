@@ -1,1 +1,0 @@
-web: cd ./bloglist-backend && npm start
