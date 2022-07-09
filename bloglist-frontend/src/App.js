@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [newBlog, setNewBlog] = useState('')
-  const [error, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [messageStyle, setMessageStyle] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -15,12 +16,10 @@ const App = () => {
   const [url, setUrl] = useState('')
 
   useEffect(() => {
-    if (user) {
-      blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-      )
-    }
-  }, [user, blogs])
+    blogService.getAll().then(blogs =>
+      setBlogs( blogs )
+    )
+  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
@@ -46,31 +45,42 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setMessageStyle('error')
+      setMessage('wrong username or password')
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
+        setMessageStyle(null)
       }, 5000)
     }
   }
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBloglistUser')
+    window.localStorage.clear()
     setUser(null)
   }
 
-  const handleCreateForm = async (event) => {
+  const addBlog = async (event) => {
     event.preventDefault()
     try {
-      await blogService.create({
+      const returnedBlog = await blogService.create({
         title, author, url
       })
+      setBlogs(blogs.concat(returnedBlog))
+      setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+      setMessageStyle('notification')
+      setTimeout(() => {
+        setMessage(null)
+        setMessageStyle(null)
+      }, 5000)
       setTitle('')
       setAuthor('')
       setUrl('')
     } catch (exception) {
-      setErrorMessage('Failed to create new blog')
+      setMessage('Failed to create new blog')
+      setMessageStyle('error')
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
+        setMessageStyle(null)
       }, 5000)
     }
   }
@@ -79,6 +89,10 @@ const App = () => {
     return (
       <div>
         <h2>log in to application</h2>
+        <Notification
+          message={message}
+          messageStyle={messageStyle}
+        />
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -108,6 +122,10 @@ const App = () => {
     <div>
       <div>
         <h2>blogs</h2>
+        <Notification
+          message={message}
+          messageStyle={messageStyle}
+        />
         <p>{user.name} logged in
           <button
             onClick={handleLogout}
@@ -116,7 +134,7 @@ const App = () => {
           </button>
         </p>
         <h2>create new</h2>
-        <form onSubmit={handleCreateForm}>
+        <form onSubmit={addBlog}>
           <div>
             title:
               <input
