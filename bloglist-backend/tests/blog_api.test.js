@@ -182,10 +182,11 @@ test('update a blog post', async () => {
 
   const randomIndex = Math.floor(Math.random() * helper.initialBlogs.length)
   const randomLikes = Math.floor(Math.random() * 100)
+  const blogsAtStart = await helper.blogsInDb()
   const BlogToUpdate = {
+    ...blogsAtStart[randomIndex],
     likes: randomLikes,
   }
-  const blogsAtStart = await helper.blogsInDb()
   await api
     .put(`/api/blogs/${blogsAtStart[randomIndex].id}`)
     .set({ 'Authorization': `bearer ${JSON.parse(loggedInToken.text).token}` })

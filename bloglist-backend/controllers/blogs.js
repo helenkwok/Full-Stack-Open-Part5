@@ -1,6 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const middleware = require('../utils/middleware')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -21,7 +20,7 @@ blogsRouter.get('/:id', async (request, response) => {
     response.status(404).end()
 })
 
-blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
+blogsRouter.post('/', async (request, response) => {
   if (!request.user) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
@@ -45,7 +44,7 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
     .json(savedBlog)
 })
 
-blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
+blogsRouter.delete('/:id', async (request, response) => {
   if (!request.user) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
@@ -73,11 +72,11 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) =
   }
 })
 
-blogsRouter.put('/:id', middleware.userExtractor, async (request, response) => {
+blogsRouter.put('/:id', async (request, response) => {
   if (!request.user) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
-  const user = request.user
+
   const blog = {
     title: request.body.title,
     author: request.body.author,
@@ -88,13 +87,14 @@ blogsRouter.put('/:id', middleware.userExtractor, async (request, response) => {
   const blogToUpdate = await Blog.findById(request.params.id)
 
   if (blogToUpdate !== null) {
-    if (blogToUpdate.user._id.toString() === user._id.toString()) {
-      const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true, runValidators: true, context: 'query' })
+    const updatedBlog = await Blog
+      .findByIdAndUpdate(
+        request.params.id,
+        blog,
+        { new: true, runValidators: true, context: 'query' }
+      )
 
-      response.json(updatedBlog)
-    } else {
-      response.status(401).end()
-    }
+    response.json(updatedBlog)
   } else {
     response.status(404).end()
   }

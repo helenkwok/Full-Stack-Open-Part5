@@ -79,6 +79,27 @@ const App = () => {
     }
   }
 
+  const addLike = async (likedBlogObject) => {
+    try {
+      const returnedBlog = await blogService.update(likedBlogObject)
+
+      let blogsUpdated = [...blogs]
+
+      blogsUpdated[blogsUpdated.findIndex(blog => blog.id === returnedBlog.id)].likes = returnedBlog.likes
+
+      setBlogs(blogsUpdated)
+
+    } catch (exception) {
+      setMessage('Failed to update blog')
+      setMessageStyle('error')
+
+      setTimeout(() => {
+        setMessage(null)
+        setMessageStyle(null)
+      }, 5000)
+    }
+  }
+
   if (user === null) {
     return (
       <LoginForm
@@ -111,7 +132,7 @@ const App = () => {
           <BlogForm createBlog={createBlog} />
         </Togglable>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} addLike={addLike} />
         )}
       </div>
     </div>

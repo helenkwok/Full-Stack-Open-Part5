@@ -13,23 +13,15 @@ morgan.token('body', (request) => {
 const requestLogger =
 morgan(':method :url :status :res[content-length] - :response-time ms :body')
 
-const tokenExtractor = (request, response, next) => {
+const userExtractor = async (request, response, next) => {
   const authorization = request.get('authorization')
 
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    request.token = authorization.substring(7)
-  } else request.token = null
-
-  next()
-}
-
-const userExtractor = async (request, response, next) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+    const decodedToken = jwt.verify(authorization.substring(7), process.env.SECRET)
+    if (decodedToken) {
+      request.user = await User.findById(decodedToken.id)
+    }
   }
-
-  request.user = await User.findById(decodedToken.id)
 
   next()
 }
@@ -60,7 +52,6 @@ const errorHandler = (error, request, response, next) => {
 
 module.exports = {
   requestLogger,
-  tokenExtractor,
   userExtractor,
   unknownEndpoint,
   errorHandler
