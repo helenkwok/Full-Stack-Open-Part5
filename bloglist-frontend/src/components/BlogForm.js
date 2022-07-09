@@ -1,18 +1,37 @@
-import React from 'react'
+import { useState } from 'react'
 
 const BlogForm = ({
-  showWhenVisible,
-  addBlog,
-  handleCancel,
-  handleTitle,
-  handleAuthor,
-  handleUrl,
-  title,
-  author,
-  url
+  createBlog
 }) => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
+  const handleTitle= (event) => {
+    setTitle(event.target.value)
+  }
+  const handleAuthor= (event) => {
+    setAuthor(event.target.value)
+  }
+  const handleUrl= (event) => {
+    setUrl(event.target.value)
+  }
+  const addBlog = (event) => {
+    event.preventDefault()
+
+    createBlog({
+      title: title,
+      author: author,
+      url: url
+    })
+
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
+
   return (
-    <div style={showWhenVisible}>
+    <div>
       <h2>create new</h2>
       <form onSubmit={addBlog}>
         <div>
@@ -44,9 +63,6 @@ const BlogForm = ({
         </div>
         <button type="submit">create</button>
       </form>
-      <button
-        onClick={handleCancel}
-      >cancel</button>
     </div>
   )
 }

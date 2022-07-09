@@ -3,9 +3,15 @@ const jwt = require('jsonwebtoken')
 const logger = require('./logger')
 const User = require('../models/user')
 
-morgan.token('body', (request) => JSON.stringify(request.body))
+morgan.token('body', (request) => {
+  if (process.env.NODE_ENV !== 'test') {
+    JSON.stringify(request.body)
+  }
+  JSON.stringify({})
+})
 
-const requestLogger = morgan(':method :url :status :res[content-length] - :response-time ms :body')
+const requestLogger =
+morgan(':method :url :status :res[content-length] - :response-time ms :body')
 
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization')
