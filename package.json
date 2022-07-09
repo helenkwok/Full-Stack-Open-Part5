@@ -4,6 +4,7 @@
   "scripts": {
     "dev:ui": "cd ./bloglist-frontend/ && npm start",
     "dev:server": "cd ./bloglist-backend/ && npm run dev",
+    "test:ui": "cd ./bloglist-frontend/ && CI=true && npm test",
     "test:server": "cd ./bloglist-backend/ && npm run dev",
     "build:ui": "rm -rf ./bloglist-backend/build && cd ./bloglist-frontend/ && npm run build && cp -r build ../bloglist-backend/build/",
     "deploy": "git subtree push --prefix bloglist-backend heroku main",
