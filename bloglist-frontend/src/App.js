@@ -58,7 +58,7 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try {
       const returnedBlog = await blogService.create(blogObject)
-
+      console.log(returnedBlog)
       setBlogs(blogs.concat(returnedBlog))
 
       setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
@@ -100,6 +100,25 @@ const App = () => {
     }
   }
 
+  const removeBlog = async (removeBlog) => {
+    if (window.confirm(`Remove blog ${removeBlog.title} by ${removeBlog.author}`)) {
+      try {
+        await blogService.remove(removeBlog.id)
+
+        setBlogs(blogs.filter(blog => blog.id !== removeBlog.id))
+
+      } catch (exception) {
+        setMessage('Failed to remove blog')
+        setMessageStyle('error')
+
+        setTimeout(() => {
+          setMessage(null)
+          setMessageStyle(null)
+        }, 5000)
+      }
+    }
+  }
+
   if (user === null) {
     return (
       <LoginForm
@@ -132,7 +151,13 @@ const App = () => {
           <BlogForm createBlog={createBlog} />
         </Togglable>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} addLike={addLike} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            user={user}
+            addLike={addLike}
+            removeBlog={removeBlog}
+          />
         )}
       </div>
     </div>
