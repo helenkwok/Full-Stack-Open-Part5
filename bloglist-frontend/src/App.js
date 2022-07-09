@@ -17,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs(blogs.slice().sort((a, b) => b.likes - a.likes))
     )
   }, [])
 
@@ -87,7 +87,7 @@ const App = () => {
 
       blogsUpdated[blogsUpdated.findIndex(blog => blog.id === returnedBlog.id)].likes = returnedBlog.likes
 
-      setBlogs(blogsUpdated)
+      setBlogs(blogsUpdated.slice().sort((a, b) => b.likes - a.likes))
 
     } catch (exception) {
       setMessage('Failed to update blog')
