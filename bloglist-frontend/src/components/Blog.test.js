@@ -4,8 +4,10 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
-describe('Test <Blog />', () => {
-  test('renders content', () => {
+describe('<Blog />', () => {
+  let container, mockHandler
+
+  beforeEach(() => {
     const blog = {
       title: 'Component testing is done with react-testing-library',
       author: 'Blogger',
@@ -24,8 +26,13 @@ describe('Test <Blog />', () => {
       name: 'Tester2',
     }
 
-    const { container } =render(<Blog blog={blog} user={user} />)
-    screen.debug(container)
+    mockHandler = jest.fn()
+
+    container =render(<Blog blog={blog} user={user} addLike={mockHandler} />).container
+  })
+
+  test('renders content', () => {
+    //screen.debug(container)
 
     screen.getByText('Component testing is done with react-testing-library')
 
@@ -40,26 +47,7 @@ describe('Test <Blog />', () => {
   })
 
   test('url and number of likes are shown when the button has been clicked', async () => {
-    const blog = {
-      title: 'Component testing is done with react-testing-library',
-      author: 'Blogger',
-      url: 'http://www.test.com/blog',
-      likes: 5,
-      user: {
-        username: 'tt123',
-        id: '12345abcdefg',
-        name: 'Tester',
-      }
-    }
-
-    const user = {
-      username: 'tester2',
-      id: '12345abcdefg',
-      name: 'Tester2',
-    }
-
-    const { container } =render(<Blog blog={blog} user={user} />)
-    screen.debug(container)
+    //screen.debug(container)
 
     const userTester = userEvent.setup()
     const button = screen.getByText('view')
@@ -73,34 +61,12 @@ describe('Test <Blog />', () => {
   })
 
   test('if the like button is clicked twice, the event handler received as props is called twice', async () => {
-    const blog = {
-      title: 'Component testing is done with react-testing-library',
-      author: 'Blogger',
-      url: 'http://www.test.com/blog',
-      likes: 5,
-      user: {
-        username: 'tt123',
-        id: '12345abcdefg',
-        name: 'Tester',
-      }
-    }
-
-    const user = {
-      username: 'tester2',
-      id: '12345abcdefg',
-      name: 'Tester2',
-    }
-
-    const mockHandler = jest.fn()
-
-    const { container } =render(<Blog blog={blog} user={user} addLike={mockHandler} />)
-
     const userTester = userEvent.setup()
 
     const likeButton = screen.getByText('like')
     await userTester.click(likeButton)
     await userTester.click(likeButton)
-    screen.debug(container)
+    //screen.debug(container)
 
     expect(mockHandler.mock.calls).toHaveLength(2)
   })
