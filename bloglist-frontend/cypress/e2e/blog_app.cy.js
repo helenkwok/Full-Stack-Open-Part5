@@ -85,7 +85,7 @@ describe('Blog app', function() {
             author: 'Blogger',
             url: 'http://www.test.com/blog'
           })
-
+          cy.visit('http://localhost:3000')
         })
 
         it('User can like a blog', function() {
@@ -121,6 +121,43 @@ describe('Blog app', function() {
             cy.get('.error').should('have.css', 'color', 'rgb(255, 0, 0)')
             cy.get('.error').should('have.css', 'border-style', 'solid')
           })
+        })
+      })
+      describe('and several blogs exist', function() {
+        beforeEach(function () {
+          cy.createBlog({
+            title: 'The title with the second most likes',
+            author: 'Blogger1',
+            url: 'http://www.test.com/blog1'
+          })
+          cy.createBlog({
+            title: 'The title with the least likes',
+            author: 'Blogger2',
+            url: 'http://www.test.com/blog2'
+          })
+          cy.createBlog({
+            title: 'The title with the most likes',
+            author: 'Blogger3',
+            url: 'http://www.test.com/blog3'
+          })
+          cy.visit('http://localhost:3000')
+        })
+
+        it('one of those can be made important', function () {
+          cy.get('.blog').eq(0).within(() => {
+            cy.contains('view').click()
+            cy.get('.likeButton').click()
+            cy.get('.likes').should('contain', 'likes 1')
+          })
+          cy.get('.blog').eq(2).within(() => {
+            cy.contains('view').click()
+            cy.get('.likeButton').click()
+            cy.get('.likes').should('contain', 'likes 1')
+            cy.get('.likeButton').click()
+            cy.get('.likes').should('contain', 'likes 2')
+          })
+          cy.get('.blog').eq(0).should('contain', 'The title with the most likes')
+          cy.get('.blog').eq(1).should('contain', 'The title with the second most likes')
         })
       })
     })
