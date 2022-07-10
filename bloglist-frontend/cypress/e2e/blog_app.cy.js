@@ -13,12 +13,18 @@ describe('Blog app', function() {
 
   describe('Login',function() {
     beforeEach(function() {
-      const user = {
+      const user1 = {
+        name: 'superUser',
+        username: 'root',
+        password: 'salainen'
+      }
+      const user2 = {
         name: 'Matti Luukkainen',
         username: 'mluukkai',
         password: 'salainen'
       }
-      cy.request('POST', 'http://localhost:3003/api/users/', user)
+      cy.request('POST', 'http://localhost:3003/api/users/', user1)
+      cy.request('POST', 'http://localhost:3003/api/users/', user2)
       cy.visit('http://localhost:3000')
     })
 
@@ -79,6 +85,7 @@ describe('Blog app', function() {
             author: 'Blogger',
             url: 'http://www.test.com/blog'
           })
+
         })
 
         it('User can like a blog', function() {
@@ -86,6 +93,33 @@ describe('Blog app', function() {
           cy.contains('view').click()
           cy.get('.likeButton').click()
           cy.get('.likes').should('contain', 'likes 1')
+          })
+        })
+
+        it('User can delete a blog', function() {
+          cy.get('.blog').within(() => {
+          cy.contains('view').click()
+          cy.contains('remove').click()
+          cy.contains('Component testing is done with react-testing-library').should('not.exist')
+          })
+        })
+
+        it('Other user cannot delete the blog', function() {
+          localStorage.clear()
+          cy.request('POST', 'http://localhost:3003/api/login', {
+            username: 'root', password: 'salainen'
+          }).then(response => {
+            localStorage.setItem('loggedBloglistUser', JSON.stringify(response.body))
+            cy.visit('http://localhost:3000')
+            cy.get('.blog').within(() => {
+              cy.contains('view').click()
+              cy.contains('remove')
+                .should('have.css', 'display', 'none')
+                .click({force: true})
+            })
+            cy.get('.error').should('contain', 'Failed to remove blog')
+            cy.get('.error').should('have.css', 'color', 'rgb(255, 0, 0)')
+            cy.get('.error').should('have.css', 'border-style', 'solid')
           })
         })
       })
