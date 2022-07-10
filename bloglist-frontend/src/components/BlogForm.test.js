@@ -29,6 +29,6 @@ describe('<BlogForm />', () => {
     expect(createBlog.mock.calls[0][0].author).toBe('Blogger' )
     expect(createBlog.mock.calls[0][0].url).toBe('http://www.test.com/blog' )
 
-    expect(createBlog.mock.calls[0][0]).toEqual(inputBLog )
+    expect(createBlog.mock.calls[0][0]).toEqual(inputBLog)
   })
 })
