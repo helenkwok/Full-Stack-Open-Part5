@@ -2,13 +2,6 @@ import { useState } from 'react'
 
 const Blog = ({ blog, user, addLike, removeBlog }) => {
   const [visible, setVisible] = useState(false)
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
 
   const showWhenVisible = { display: visible ? '' : 'none' }
 
@@ -29,7 +22,7 @@ const Blog = ({ blog, user, addLike, removeBlog }) => {
   }
 
   return (
-    <div style={blogStyle} className='blog'>
+    <div className='blog'>
       <div>
         <span className='title'>{blog.title}</span>
         <span>{' '}</span>
