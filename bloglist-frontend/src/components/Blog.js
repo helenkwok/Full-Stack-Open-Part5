@@ -16,21 +16,24 @@ const Blog = ({ blog, user, addLike, removeBlog }) => {
     setVisible(!visible)
   }
 
-  const blogAddLike = {
-    id: blog.id,
-    user: blog.user.id,
-    title: blog.title,
-    author: blog.author,
-    url: blog.url,
-    likes: blog.likes + 1
+  const updateLike = () => {
+    const updateBlog = {
+      id: blog.id,
+      user: blog.user.id,
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1
+    }
+    addLike(updateBlog)
   }
 
   return (
     <div style={blogStyle} className='blog'>
       <div>
-        <span>{blog.title}</span>
+        <span className='title'>{blog.title}</span>
         <span>{' '}</span>
-        <span>{blog.author}</span>
+        <span className='author'>{blog.author}</span>
         <button onClick={toggleVisibility}>
           {visible? 'hide' : 'view'}
         </button>
@@ -39,10 +42,8 @@ const Blog = ({ blog, user, addLike, removeBlog }) => {
         <div className='url'>{blog.url}</div>
         <div className='likes'>
           <span>likes {blog.likes}</span>
-          <button onClick={() => addLike(blogAddLike)}>like</button>
+          <button className='likeButton' onClick={updateLike}>like</button>
         </div>
-        <button onClick={() => addLike(blogAddLike)}>like</button>
-        <br />
         {blog.user.name}
         <br />
         <button
