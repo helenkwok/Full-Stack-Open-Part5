@@ -1,5 +1,7 @@
 # Full-Stack-Open-Part5
 
-Bloglistk link: <https://bloglist-2022.herokuapp.com>
+*Heroku is no longer free* --> Migrated to [https://www.deta.sh](https://www.deta.sh)
 
-API link: <https://bloglist-2022.herokuapp.com/api/blogs>
+Bloglistk link: [https://6rp228.deta.dev](https://6rp228.deta.dev) ~~https://bloglist-2022.herokuapp.com~~
+
+API link: [https://6rp228.deta.dev/api/blogs](https://6rp228.deta.dev/api/blogs) ~~https://bloglist-2022.herokuapp.com/api/blogs~~
